@@ -3,7 +3,7 @@ from dash import dcc, html, Input, Output, State
 import plotly.graph_objs as go
 import pandas as pd
 import requests
-import talib
+import pandas_ta as ta  # talib yerine pandas_ta kullanıyoruz
 import dash_bootstrap_components as dbc
 from datetime import datetime
 
@@ -74,11 +74,12 @@ def get_live_price():
 
 # Grafik oluşturma fonksiyonu
 def generate_chart(df, show_ema9, show_ema21, show_macd, show_rsi, show_sma):
-    sma = talib.SMA(df['close'], timeperiod=14)
-    rsi = talib.RSI(df['close'], timeperiod=14)
-    macd, macd_signal, _ = talib.MACD(df['close'], fastperiod=12, slowperiod=26, signalperiod=9)
-    ema_9 = talib.EMA(df['close'], timeperiod=9)
-    ema_21 = talib.EMA(df['close'], timeperiod=21)
+    # pandas_ta kullanarak göstergeler
+    sma = ta.sma(df['close'], timeperiod=14)
+    rsi = ta.rsi(df['close'], timeperiod=14)
+    macd, macd_signal, _ = ta.macd(df['close'], fast=12, slow=26, signal=9)
+    ema_9 = ta.ema(df['close'], timeperiod=9)
+    ema_21 = ta.ema(df['close'], timeperiod=21)
 
     candlestick = go.Candlestick(
         x=df['timestamp'], open=df['open'], high=df['high'],
